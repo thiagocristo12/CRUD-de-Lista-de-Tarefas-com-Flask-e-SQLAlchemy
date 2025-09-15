@@ -2,11 +2,15 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
 
+# configuração da aplicação
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tarefas.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+# modelagem de dados
 
 class Tarefa(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +19,9 @@ class Tarefa(db.Model):
     def __repr__(self):
         return f"<Tarefa {self.descricao}>"
 
+# rotas
+
+# adicionar e listar
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -31,7 +38,7 @@ def index():
     tarefas = Tarefa.query.all()
     return render_template("index.html", tarefas=tarefas)
 
-
+# excluir
 @app.route("/deletar/<int:id>")
 def deletar(id):
     tarefa = Tarefa.query.get_or_404(id)
@@ -43,7 +50,7 @@ def deletar(id):
     except:
         return "Erro ao deletar a tarefa."
 
-
+# editar
 @app.route("/editar/<int:id>", methods=["GET", "POST"])
 def editar(id):
     tarefa = Tarefa.query.get_or_404(id)
@@ -60,7 +67,9 @@ def editar(id):
         return render_template("editar.html", tarefa=tarefa)
 
 
+# inicialização
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+
