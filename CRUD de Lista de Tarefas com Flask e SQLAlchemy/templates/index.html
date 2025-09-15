@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Tarefas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title">Lista de Tarefas</h1>
+
+        <div class="card">
+            <form method="POST" action="/">
+                <input type="text" name="descricao" placeholder="Digite uma nova tarefa" required>
+                <button type="submit" class="btn btn-primary">Adicionar</button>
+            </form>
+        </div>
+
+        <div class="task-list">
+            {% for tarefa in tarefas %}
+            <div class="task-item">
+                <span>{{ tarefa.descricao }}</span>
+                <div class="actions">
+                    <a href="{{ url_for('editar', id=tarefa.id) }}" class="btn btn-warning">Editar</a>
+                    <a href="{{ url_for('deletar', id=tarefa.id) }}" class="btn btn-danger">Excluir</a>
+                </div>
+            </div>
+            {% else %}
+            <p class="empty">Nenhuma tarefa adicionada.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>
